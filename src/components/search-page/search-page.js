@@ -14,7 +14,7 @@ const SearchPage = () => {
   const [searchType, setSearchType] = useState('movie');
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // State to track loading state
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedOption, setSelectedOption] = useState('movie');
 
@@ -28,7 +28,6 @@ const SearchPage = () => {
       try {
         const results = await apiInstance.searchMedia(searchQuery, searchType);
         setMovies(results);
-        console.log(`Searching for ${searchQuery} with type ${searchType}`, results);
       } catch (error) {
         console.error('Error searching media:', error);
       } finally {

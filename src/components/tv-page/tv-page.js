@@ -44,7 +44,7 @@ const TVPage = () => {
   }, []);
 
   const handleMoviePress = (item) => {
-    let route = { id: item.id, type: 'movie' };
+    let route = { id: item.id, type: 'tv' };
     navigation.navigate('Detail', { route });
   };
 
