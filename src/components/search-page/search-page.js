@@ -17,6 +17,7 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedOption, setSelectedOption] = useState('movie');
+  const [isShowErrorMessage, setShowErrorMessage] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -24,6 +25,7 @@ const SearchPage = () => {
 
   const handleSearch = async () => {
     if (searchQuery.trim() !== '') {
+      setShowErrorMessage(false);
       setIsLoading(true);
       try {
         const results = await apiInstance.searchMedia(searchQuery, searchType);
@@ -34,6 +36,7 @@ const SearchPage = () => {
         setIsLoading(false);
       }
     } else {
+      setShowErrorMessage(true);
       console.log('Search query is empty');
     }
   };
@@ -57,7 +60,7 @@ const SearchPage = () => {
           Search Movie/TV Show Name
           <Text style={styles.redAsterisk}>*</Text>
         </Text>
-        <View style={styles.searchContainer}>
+        <View style={[styles.searchContainer, isShowErrorMessage && styles.inputError]}>
           <Icon name="search" size={20} style={styles.searchIcon} />
           <TextInput
             style={styles.input}
@@ -66,7 +69,6 @@ const SearchPage = () => {
             onChangeText={setSearchQuery}
           />
         </View>
-
         <View style={styles.horizontalStack}>
           <TouchableOpacity style={styles.selectButton} onPress={onOpen}>
             <Text style={styles.selectedText}>{searchType === 'tv' ? 'TV Shows' : searchType === 'movie' ? 'Movies' : 'Multi (TV and Movies)'}</Text>
@@ -77,7 +79,11 @@ const SearchPage = () => {
             <Text style={styles.seacrhBtnText}>Search</Text>
           </TouchableOpacity>
         </View>
-
+        {isShowErrorMessage === true && (
+          <Text style={styles.validationMessage}>
+            Movie/TV show name is required
+          </Text>
+        )}
         <Actionsheet isOpen={isOpen} onClose={onClose}>
           <Actionsheet.Content>
             <TouchableOpacity
@@ -220,7 +226,14 @@ const styles = StyleSheet.create({
   },
   redAsterisk: {
     color: 'red',
-  }
+  },
+  validationMessage: {
+    fontSize: 10,
+    color: 'red'
+  },
+  inputError: {
+    borderColor: 'red', 
+  },
 });
 
 export default SearchPage;
